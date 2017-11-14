@@ -245,10 +245,10 @@ void ofxGstVideoSyncPlayer::update()
                 }
 
                 ///> If the master is paused when the client connects pause the client also.
-                if( m_paused ){
-                    sendPauseMsg();
-                    return;
-                }
+                // if( m_paused ){
+                //     sendPauseMsg();
+                //     return;
+                // }
 
                 ofLogVerbose("ofxGstVideoSyncPlayer") << "New client connected with IP : " << _newClient << " and port : " << _newClientPort << std::endl;
 
