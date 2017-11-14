@@ -244,11 +244,6 @@ void ofxGstVideoSyncPlayer::update()
                     return;
                 }
 
-                ///> If the master is paused when the client connects pause the client also.
-                // if( m_paused ){
-                //     sendPauseMsg();
-                //     return;
-                // }
 
                 ofLogNotice("ofxGstVideoSyncPlayer") << "New client connected with IP : " << _newClient << " and port : " << _newClientPort << std::endl;
 
@@ -260,6 +255,13 @@ void ofxGstVideoSyncPlayer::update()
                     m.addInt64Arg(m_pos);
                     m.setRemoteEndpoint(_newClient, _newClientPort);
                     m_oscSender->sendMessage(m,false);
+
+                    //> If the master is paused when the client connects pause the client also.
+                    if( m_paused ){
+                        sendPauseMsg();
+                        return;
+                    }
+
                 }
 
             }
