@@ -250,7 +250,7 @@ void ofxGstVideoSyncPlayer::update()
                 //     return;
                 // }
 
-                ofLogVerbose("ofxGstVideoSyncPlayer") << "New client connected with IP : " << _newClient << " and port : " << _newClientPort << std::endl;
+                ofLogNotice("ofxGstVideoSyncPlayer") << "New client connected with IP : " << _newClient << " and port : " << _newClientPort << std::endl;
 
                 if( m_oscSender ){
                     m_oscSender->setup(_newClient, _newClientPort);
@@ -272,7 +272,7 @@ void ofxGstVideoSyncPlayer::update()
 
                 if( it != m_connectedClients.end() ){
                     auto temp = it;
-                    ofLogVerbose("ofxGstVideoSyncPlayer") << "Disconnecting client with IP : " << _exitingClient << " and port : " << _exitingClientPort << std::endl;
+                    ofLogNotice("ofxGstVideoSyncPlayer") << "Disconnecting client with IP : " << _exitingClient << " and port : " << _exitingClientPort << std::endl;
                     m_connectedClients.erase(temp);
 
                 }
