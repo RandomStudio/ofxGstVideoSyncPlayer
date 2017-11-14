@@ -49,10 +49,12 @@ class ofxGstVideoSyncPlayer{
 
         bool                            m_isMaster;         ///> Is the master?
         bool                            m_initialized;      ///> If the player initialized properly ??
+        bool                            slaveGotMaster;     ///> Did the slave get any comm from master?
     private:
 
         void                            setMasterClock();
         void                            setClientClock( GstClockTime _baseTime );
+        void                            slaveSendInit();
 
         void                            sendPauseMsg();
         void                            sendPlayMsg();

@@ -121,6 +121,8 @@ void ofxGstVideoSyncPlayer::initAsSlave( const std::string _clockIp, const int _
     m_oscSender->setup(m_clockIp, m_sndPort);
 
     m_initialized = true;
+
+    slaveGotMaster = false;
 }
 
 void ofxGstVideoSyncPlayer::loadAsync( std::string _path )
@@ -135,12 +137,7 @@ void ofxGstVideoSyncPlayer::loadAsync( std::string _path )
     gst_element_set_start_time(m_gstPipeline, GST_CLOCK_TIME_NONE);
 
     if( !m_isMaster ){
-         ofxOscMessage m;
-         m.setAddress("/client-loaded");
-         m.addInt64Arg(m_rcvPort);
-         if( m_oscSender ){
-            m_oscSender->sendMessage(m,false);
-         }
+        slaveSendInit();
     }
 
 }
@@ -178,22 +175,31 @@ bool ofxGstVideoSyncPlayer::load( std::string _path )
     }
 
     if( !m_isMaster ){
-         ofxOscMessage m;
-         m.setAddress("/client-loaded");
-         m.addInt64Arg(m_rcvPort);
-         if( m_oscSender ){
-            m_oscSender->sendMessage(m,false);
-         }
+        slaveSendInit();
     }
 
     return _loaded;
 }
 
 
+void ofxGstVideoSyncPlayer::slaveSendInit() {
+  ofxOscMessage m;
+  m.setAddress("/client-loaded");
+  m.addInt64Arg(m_rcvPort);
+  if( m_oscSender ){
+     m_oscSender->sendMessage(m,false);
+  }
+}
+
 void ofxGstVideoSyncPlayer::update()
 {
-    if( m_isMaster && m_loop && m_movieEnded ){
 
+    if (!m_isMaster && !slaveGotMaster) {
+      ofLogVerbose("sending init message to master (hope for a response)...");
+      slaveSendInit();
+    }
+
+    if( m_isMaster && m_loop && m_movieEnded ){
 
         ///> Get ready to start over..
         gst_element_set_state(m_gstPipeline, GST_STATE_READY);
@@ -274,6 +280,8 @@ void ofxGstVideoSyncPlayer::update()
             else if( m.getAddress() == "/client-init-time" && !m_isMaster ){
                 ofLogVerbose("ofxGstVideoSyncPlayer") << " CLIENT RECEIVED MASTER INIT TIME! "  << m.getRemoteIp() <<std::endl;
                 m_pos = m.getArgAsInt64(1);
+
+                slaveGotMaster = true;
 
                 ///> Initial base time for the clients.
                 ///> Set the slave network clock that is going to poll the master.
