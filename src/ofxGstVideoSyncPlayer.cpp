@@ -542,6 +542,11 @@ void ofxGstVideoSyncPlayer::pause()
                 ofLogWarning() << "Pausing seek failed" << std::endl;
         }
 
+        // doing this "again" appears to prevent transient 0-position values being read
+        gst_element_get_state(m_gstPipeline, NULL, NULL, GST_CLOCK_TIME_NONE);
+        gst_element_query_position(GST_ELEMENT(m_gstPipeline),GST_FORMAT_TIME,&m_pos);
+
+
         m_paused = true;
 
         sendPauseMsg();
