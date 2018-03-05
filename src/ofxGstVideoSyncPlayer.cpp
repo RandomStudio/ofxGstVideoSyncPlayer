@@ -183,12 +183,13 @@ bool ofxGstVideoSyncPlayer::load( std::string _path )
 
 
 void ofxGstVideoSyncPlayer::slaveSendInit() {
-  ofxOscMessage m;
-  m.setAddress("/client-loaded");
-  m.addInt64Arg(m_rcvPort);
-  if( m_oscSender ){
-     m_oscSender->sendMessage(m,false);
-  }
+    ofLogVerbose("slaveSendInit...");
+    ofxOscMessage m;
+    m.setAddress("/client-loaded");
+    m.addInt64Arg(m_rcvPort);
+    if( m_oscSender ){
+        m_oscSender->sendMessage(m,false);
+    }
 }
 
 void ofxGstVideoSyncPlayer::update()
@@ -240,7 +241,7 @@ void ofxGstVideoSyncPlayer::update()
                 std::pair<clients_iter, bool> ret;
                 ret = m_connectedClients.insert(_newClientKey);
                 if( ret.second == false ){
-                    ofLogError() << " Client with Ip : " << _newClient << " and Port : " << _newClientPort << " already exists! PLAYBACK will NOT work properly" << std::endl;
+                    ofLogVerbose() << " Client with Ip : " << _newClient << " and Port : " << _newClientPort << " already exists! Ignoring." << std::endl;
                     return;
                 }
 
