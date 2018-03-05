@@ -333,7 +333,6 @@ void ofxGstVideoSyncPlayer::update()
                 }
 
                 m_paused = true;
-                slaveCommands++; // this counts as a master-to-slave command
 
             }
             else if( m.getAddress() == "/loop" && !m_isMaster ){
@@ -375,7 +374,6 @@ void ofxGstVideoSyncPlayer::update()
 
                 m_movieEnded = true;
                 m_paused = true;
-                slaveCommands++; // this counts as a master-to-slave command
             }
         }
     }
