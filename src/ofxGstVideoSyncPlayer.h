@@ -39,6 +39,7 @@ class ofxGstVideoSyncPlayer{
         bool                            isMovieEnded();
         bool                            isMaster();
         bool                            isSlaveSynced();
+        bool                            hasSlaveGotCommands();
         void                            exit(ofEventArgs & args);
         void                            setPixelFormat( const ofPixelFormat & _pixelFormat );
         const Clients&                  getConnectedClients();
@@ -50,7 +51,8 @@ class ofxGstVideoSyncPlayer{
 
         bool                            m_isMaster;         ///> Is the master?
         bool                            m_initialized;      ///> If the player initialized properly ??
-        bool                            slaveGotMaster;     ///> Did the slave get any comm from master?
+        bool                            slaveGotMaster;     ///> Did the slave get init from master?
+        long unsigned int               slaveCommands;      // Has the slave received any comms from master (other than init)?
     private:
 
         void                            setMasterClock();

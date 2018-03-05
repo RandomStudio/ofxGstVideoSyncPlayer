@@ -123,6 +123,7 @@ void ofxGstVideoSyncPlayer::initAsSlave( const std::string _clockIp, const int _
     m_initialized = true;
 
     slaveGotMaster = false;
+    slaveCommands = 0;
 }
 
 void ofxGstVideoSyncPlayer::loadAsync( std::string _path )
@@ -310,6 +311,7 @@ void ofxGstVideoSyncPlayer::update()
 
                 m_paused = false;
                 m_movieEnded =false;
+                slaveCommands++; // this counts as a master-to-slave command
             }
             else if( m.getAddress() == "/pause" && !m_isMaster ){
                 m_pos = m.getArgAsInt64(0);
@@ -331,6 +333,8 @@ void ofxGstVideoSyncPlayer::update()
                 }
 
                 m_paused = true;
+                slaveCommands++; // this counts as a master-to-slave command
+
             }
             else if( m.getAddress() == "/loop" && !m_isMaster ){
 
@@ -349,6 +353,7 @@ void ofxGstVideoSyncPlayer::update()
 
                 m_movieEnded = false;
                 m_paused = false;
+                slaveCommands++; // this counts as a master-to-slave command
             }
             else if( m.getAddress() == "/seek" && !m_isMaster ){
 
@@ -362,6 +367,7 @@ void ofxGstVideoSyncPlayer::update()
               }
 
               m_paused = true;
+              slaveCommands++; // this counts as a master-to-slave command
 
             }
             else if( m.getAddress() == "/eos" && !m_isMaster ){
@@ -369,6 +375,7 @@ void ofxGstVideoSyncPlayer::update()
 
                 m_movieEnded = true;
                 m_paused = true;
+                slaveCommands++; // this counts as a master-to-slave command
             }
         }
     }
@@ -652,6 +659,10 @@ bool ofxGstVideoSyncPlayer::isMaster()
 bool ofxGstVideoSyncPlayer::isSlaveSynced()
 {
     return slaveGotMaster;
+}
+
+bool ofxGstVideoSyncPlayer::hasSlaveGotCommands() {
+    return slaveCommands > 0;
 }
 
 
