@@ -649,6 +649,12 @@ bool ofxGstVideoSyncPlayer::isMaster()
     return m_isMaster;
 }
 
+bool ofxGstVideoSyncPlayer::isSlaveSynced()
+{
+    return slaveGotMaster;
+}
+
+
 void ofxGstVideoSyncPlayer::setPixelFormat( const ofPixelFormat & _pixelFormat )
 {
     m_videoPlayer.setPixelFormat(_pixelFormat);

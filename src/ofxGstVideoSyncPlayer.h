@@ -38,6 +38,7 @@ class ofxGstVideoSyncPlayer{
         bool                            isPaused();
         bool                            isMovieEnded();
         bool                            isMaster();
+        bool                            isSlaveSynced();
         void                            exit(ofEventArgs & args);
         void                            setPixelFormat( const ofPixelFormat & _pixelFormat );
         const Clients&                  getConnectedClients();
